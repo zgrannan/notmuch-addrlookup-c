@@ -272,6 +272,13 @@ run_queries (notmuch_database_t *db,
                   gchar *name = has_space ? g_match_info_fetch_named (matches, "name") : g_strdup (from);
                   gchar *addr = has_space ? g_match_info_fetch_named (matches, "mail") : g_strdup (from);
                   g_strstrip(name); /* Name should be 'Bob', not 'Bob ' */
+                  if(name[0] == '"'){
+                    int len = strlen(name);
+                    if(name[len-1] == '"'){
+                      memmove(name, name+1, len-2);
+                      name[len-2] = 0;
+                    }
+                  }
                   gchar *patt = g_strdup_printf ("\\b%s", query_name);
 
                   if (g_regex_match_simple (patt, from, G_REGEX_CASELESS, 0))
